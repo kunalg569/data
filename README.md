@@ -13,7 +13,11 @@ It ingests AdventureWorks sample data from HTTP sources, lands it in an Azure Da
 
 ## 🧱 Architecture
 
-![Architecture](./docs/architecture.png) <!-- Replace with the actual path of your architecture image -->
+## Architecture
+
+![Architecture](architecture.png)
+
+
 
 | Stage                | Service             | Layer  | Purpose                                          |
 |----------------------|--------------------|--------|--------------------------------------------------|
