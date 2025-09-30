@@ -37,7 +37,7 @@
     {
         "p_rel_url" : "anshlamba03/Adventure-Works-Data-Engineering-Project/main/Data/AdventureWorks_Sales_2016.csv",
         "p_sink_folder" : "AdventureWorks_Sales_2016",
-        "p_sink_file" : "AdventureWorks_Sales_2016.cvsv"
+        "p_sink_file" : "AdventureWorks_Sales_2016.csv"
     },
     {
         "p_rel_url" : "anshlamba03/Adventure-Works-Data-Engineering-Project/main/Data/AdventureWorks_Sales_2017.csv",
@@ -49,4 +49,5 @@
         "p_sink_folder" : "AdventureWorks_Territories",
         "p_sink_file" : "AdventureWorks_Territories.csv"
     }
+
 ]
