@@ -123,6 +123,37 @@ This forms a classic **star schema** to support analytics.
 
 ---
 
+### 4. Creating Dynamic Pipelines in ADF  
+
+To make ingestion scalable across multiple files without hardcoding:  
+
+1. **Parameterization**  
+   - Create **one parameter** for the HTTP source file (CSV).  
+   - For the ADLS Gen2 sink, define **two parameters**: one for the folder (directory) and one for the file.  
+   - In total, you will use **3 parameters** (1 source + 2 sink).  
+
+2. **For Each Activity**  
+   - Add a loop (`ForEach`) to iterate through files in your GitHub repo.  
+   - The iteration list comes from a **JSON array/dictionary** of relative file URLs and dataset metadata.  
+
+3. **Lookup Activity**  
+   - Use a **Lookup activity** to read the JSON file that contains the dataset specifications.  
+   - The `ForEach` activity references this Lookup output and passes values into parameters.  
+
+4. **Embedding the Copy Activity**  
+   - Place the **Dynamic Copy activity** inside the `ForEach`.  
+   - This way, each iteration dynamically pulls the right file from GitHub and lands it in the correct ADLS Gen2 folder.  
+
+📌 *Tip:* This approach lets you add new CSVs to your JSON spec without modifying the pipeline itself—making it extensible and production-friendly.  
+📸 Add supporting screenshots (e.g., `embedding.png`) to the `/docs` folder for better clarity.  
+
+---
+
+✅ With this, **Phase 1 (Bronze layer)** is complete.  
+Next, we move into **Phase 2 (Silver layer)**, where transformations are performed using **Azure Databricks**.  
+
+---
+
 ## 🔄 Medallion Workflow Recap  
 
 1. **Bronze Layer (Raw Store):**  
@@ -143,7 +174,7 @@ This forms a classic **star schema** to support analytics.
 
 - [x] Defined resource setup (RG, ADLS, ADF)  
 - [x] Bronze ingestion pipeline created (static)  
-- [ ] Upgrade to dynamic pipelines (parameterized)  
+- [x] Bronze ingestion pipeline upgraded (dynamic with parameters + ForEach)  
 - [ ] Databricks notebooks for Silver transformations  
 - [ ] Synapse schema deployment (Gold)  
 - [ ] Power BI dashboard integration  
