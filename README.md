@@ -145,7 +145,21 @@ To make ingestion scalable across multiple files without hardcoding:
    - This way, each iteration dynamically pulls the right file from GitHub and lands it in the correct ADLS Gen2 folder.  
 
 📌 *Tip:* This approach lets you add new CSVs to your JSON spec without modifying the pipeline itself—making it extensible and production-friendly.  
-📸 Add supporting screenshots (e.g., `embedding.png`) to the `/docs` folder for better clarity.  
+📸 Add supporting screenshots 
+
+
+## 📸 Embedding DynamicCopy & Parameters in ForEach Activity
+
+**1. Embedding DynamicCopy into ForEach activity**  
+![embedding1](embedding_dynamiccopy_in_foreach_activity.png)
+
+**2. Embedding Parameters within ForEach as Source**  
+![embedding2](embedding_parameters_in_forEach_Source.png)
+
+**3. Embedding Parameters within ForEach as Sink/Destination**  
+![embedding2](embedding_parameters_in_forEach_Sink.png)
+
+
 
 ---
 
