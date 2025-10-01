@@ -88,12 +88,66 @@ This forms a classic **star schema** to support analytics.
 
 ---
 
+## ⚙️ Step-by-Step Implementation  
+
+### 1. Resource Setup  
+- **Create Resource Group** – logical container for all resources.  
+- **Create Storage Account (Resource 1)** – use **Locally Redundant Storage (LRS)**.  
+- **Enable Hierarchical Namespace** – converts blob storage into **Data Lake Gen2** (required for folder-like structures and table storage).  
+- **Create Azure Data Factory (Resource 2)** – for data ingestion pipelines.  
+- **Define Medallion Containers** – within the Data Lake, create three containers:  
+  - `bronze` → raw, unprocessed data  
+  - `silver` → transformed, curated data  
+  - `gold` → serving layer for analytics  
+
+---
+
+### 2. Data Ingestion (ADF → Bronze)  
+- Use **Azure Data Factory Pipelines** to ingest data from GitHub (source) into ADLS Gen2 (destination).  
+- Required **Linked Services**:  
+  - **HTTP** (base URL from GitHub)  
+  - **Azure Data Lake Gen2** (destination)  
+- **Pipeline Activities**:  
+  1. **Copy Activity** → moves data from HTTP source to ADLS Gen2 Bronze container.  
+  2. **Source Configuration** → specify the relative URL of the raw CSV.  
+  3. **Sink Configuration** → map to Bronze container in ADLS Gen2.  
+
+---
+
+### 3. Static vs. Dynamic Pipelines  
+- **Static Pipeline:** Current setup ingests a single file at a time.  
+- **Dynamic Pipeline (Recommended in Real Projects):**  
+  - Uses **Iteration & Conditionals** (e.g., *For Each* activity).  
+  - Dynamically parameterizes file names/paths.  
+  - Enables ingestion of multiple files in a single automated pipeline run.  
+
+---
+
+## 🔄 Medallion Workflow Recap  
+
+1. **Bronze Layer (Raw Store):**  
+   - Direct ingestion from GitHub into ADLS Gen2.  
+   - Stores CSVs in raw, unmodified form.  
+
+2. **Silver Layer (Transformation):**  
+   - Databricks cleans, validates schema, and enriches the data.  
+   - Adds date parts, enforces types, ensures referential integrity.  
+
+3. **Gold Layer (Serving):**  
+   - Curated star schema tables published into Synapse.  
+   - Optimized for BI consumption.  
+
+---
+
 ## 🚀 Roadmap (initial)
 
-- [ ] Land all CSVs to Bronze (ADF HTTP → ADLS Gen2)  
-- [ ] Create Databricks notebooks to build Silver tables  
-- [ ] Publish star schema in Synapse (Gold)  
-- [ ] Build Power BI dashboards (Sales trends, Return rates, Geo breakdown)
+- [x] Defined resource setup (RG, ADLS, ADF)  
+- [x] Bronze ingestion pipeline created (static)  
+- [ ] Upgrade to dynamic pipelines (parameterized)  
+- [ ] Databricks notebooks for Silver transformations  
+- [ ] Synapse schema deployment (Gold)  
+- [ ] Power BI dashboard integration  
+
 
 ---
 
