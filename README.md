@@ -166,6 +166,47 @@ To make ingestion scalable across multiple files without hardcoding:
 ✅ With this, **Phase 1 (Bronze layer)** is complete.  
 Next, we move into **Phase 2 (Silver layer)**, where transformations are performed using **Azure Databricks**.  
 
+
+---
+
+### 5. Silver Phase — Transformation with Azure Databricks  
+
+After completing the Bronze ingestion, the next step is to clean and transform the data in **Azure Databricks**.  
+
+- **Databricks Setup**  
+  - Create a compute cluster within Azure Databricks.  
+  - Connect Databricks Notebooks to **Azure Data Factory (ADF)**.  
+  - Note: This requires credentials and secure communication between Databricks and ADF.  
+
+- **Authentication & Access**  
+  1. Create a **Microsoft Entra ID key (certificate)** that holds the authentication credentials.  
+  2. Generate a **secret/key** for your Entra ID.  
+  3. Assign the role **Storage Blob Contributor** to your storage account in Azure.  
+
+- **Data Loading**  
+  - Use official Databricks documentation to load data from ADLS Gen2 into Databricks.  
+  - Perform schema enforcement, cleansing, and enrichment.  
+  - Add date parts, enforce data types, and validate relationships.  
+
+- **Data Writing**  
+  - Save transformed datasets in **Parquet** format into the **Silver container** in ADLS Gen2.  
+  - Once all files are transformed and saved, your Silver layer is complete.  
+
+> 📓 *Refer to the provided `.ipynb` notebooks for transformation code.  
+> Advanced transformations and business rules are further handled in **Power BI** using Table View and **DAX** for flexible analysis and visualization.*  
+
+---
+
+### 6. Gold Phase — Serving with Azure Synapse  
+
+With the Silver layer complete, the final step is to publish a **serving layer** in **Azure Synapse Analytics**.  
+
+- Create **external tables** pointing to curated Silver Parquet data.  
+- Model the data into a **star schema** optimized for BI queries.  
+- Define **fact** (Sales, Returns) and **dimension** (Products, Customers, Territories, Calendar, etc.) tables.  
+- Expose these curated datasets for **Power BI dashboards and reporting**.
+
+
 ---
 
 ## 🔄 Medallion Workflow Recap  
