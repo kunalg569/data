@@ -199,13 +199,40 @@ After completing the Bronze ingestion, the next step is to clean and transform t
 
 ### 6. Gold Phase — Serving with Azure Synapse  
 
-With the Silver layer complete, the final step is to publish a **serving layer** in **Azure Synapse Analytics**.  
+The **Gold Layer** is the serving/consumption layer. Here, curated and business-ready datasets are exposed to BI tools and end-users.  
 
-- Create **external tables** pointing to curated Silver Parquet data.  
-- Model the data into a **star schema** optimized for BI queries.  
-- Define **fact** (Sales, Returns) and **dimension** (Products, Customers, Territories, Calendar, etc.) tables.  
-- Expose these curated datasets for **Power BI dashboards and reporting**.
+**Step 1: Synapse Setup**  
+- Create an **Azure Synapse Analytics workspace**.  
+- Configure a **serverless SQL database**.  
 
+**Step 2: Permissions**  
+- Assign **Storage Blob Contributor** role to Synapse and your user identity.  
+
+**Step 3: Query Silver Data**  
+- Use **`OPENROWSET()`** to query curated data directly from ADLS Silver.  
+- This allows schema validation and lightweight exploration before publishing.  
+
+**Step 4: Create Views**  
+- Build logical **views** for each Silver dataset (Sales, Customers, Products, Territories, Returns, Calendar, etc.).  
+
+**Step 5: Create External Tables**  
+- Define:  
+  - **Credentials** (managed identity or keys).  
+  - **External Data Sources** (point to Silver and Gold containers).  
+  - **External File Formats** (Parquet, CSV, JSON, with compression).  
+- Promote datasets into **external tables** aligned with fact and dimension roles.  
+
+**Step 6: Data Modeling**  
+- Organize into a **star schema** with fact tables (Sales, Returns) and dimension tables (Products, Customers, Territories, Calendar, Product Subcategories).  
+- Optimize with partitioning/indexing for efficient queries.  
+
+**Step 7: Consumption**  
+- Power BI connects to Synapse Gold tables for dashboards and KPIs.  
+
+**References:**  
+- [Create Database Master Key](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-master-key-transact-sql?view=sql-server-ver17)  
+- [Create Database Scoped Credential](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-database-scoped-credential-transact-sql?view=sql-server-ver17)  
+- [Create External File Format](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-external-file-format-transact-sql?view=sql-server-ver17&tabs=delimited)  
 
 ---
 
@@ -230,9 +257,9 @@ With the Silver layer complete, the final step is to publish a **serving layer**
 - [x] Defined resource setup (RG, ADLS, ADF)  
 - [x] Bronze ingestion pipeline created (static)  
 - [x] Bronze ingestion pipeline upgraded (dynamic with parameters + ForEach)  
-- [ ] Databricks notebooks for Silver transformations  
-- [ ] Synapse schema deployment (Gold)  
-- [ ] Power BI dashboard integration  
+- [x] Databricks notebooks for Silver transformations  
+- [x] Synapse schema deployment (Gold)  
+- [x] Power BI dashboard integration  
 
 
 ---
