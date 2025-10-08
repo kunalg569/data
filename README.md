@@ -54,19 +54,35 @@ It ingests AdventureWorks sample data from HTTP sources, lands it in an Azure Da
 
 ---
 
-## ⭐ Target Data Model
+## 📐 Power BI Data Model (Star Schema Implementation)
 
-- **Fact tables:** Sales (by order line), Returns (by product × territory × return date)  
-- **Dimension tables:** Products, Subcategories, Categories, Customers, Territories, Calendar  
+The Power BI model is a direct implementation of the **Star Schema** established in the **Gold Layer** (Azure Synapse). This structure is crucial for efficient query performance and accurate measure calculation (DAX).
 
-**Joins:**  
-- Sales ↔ Products on `ProductKey`  
-- Sales ↔ Customers on `CustomerKey`  
-- Sales ↔ Territories on `TerritoryKey = SalesTerritoryKey`  
-- Sales ↔ Calendar on `OrderDate = Date`  
-- Returns ↔ Products/Territories/Calendar similarly  
+The model features **two Fact tables** and **six Dimension (Lookup) tables**. All relationships are **One-to-Many (\(1:*\))** and flow from the Dimension tables to the Fact tables, which is the optimal design for analytical reports.
 
-This forms a classic **star schema** to support analytics.
+![Data Model](data_model.PNG)
+
+### Fact Tables (The 'What' and 'How Much')
+
+| Table | Granularity | Key Relationships | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Sales Data** | Order Line Item | Related to **Calendar**, **Product**, **Customer**, and **Territory** Lookups. | Contains transactional sales data (orders, revenue, quantity) necessary for calculating most KPIs, trends, and profitability metrics. |
+| **Returns Data** | Product/Territory/Date | Related to **Calendar**, **Product**, and **Territory** Lookups. | Contains the volume and value of returned goods, essential for calculating the **Return Rate (%)** shown on the Executive Dashboard. |
+
+### Dimension Tables (The 'Who', 'When', and 'Where')
+
+| Table | Role in Analysis | Key Attributes | Insights Enabled |
+| :--- | :--- | :--- | :--- |
+| **Calendar Lookup** | Time Dimension | Day, Month Name, Year, Weekday, Start of Quarter, etc. | Allows for time-series analysis like **Revenue Trending** and year-over-year comparisons (e.g., in the Revenue Trending chart). |
+| **Customer Lookup** | Customer Demographics | Annual Income, Occupation, Gender, Education Level. | Enables detailed segmentation for the **Customer Dashboard**, driving insights like *Orders by Income Level* and *Top 10 Customers*. |
+| **Territory Lookup** | Geographic Dimension | Continent, Country, Region. | Facilitates geographical filtering and analysis, allowing executives to assess performance by **Continent** (as seen in the filter pane). |
+| **Product Lookup** | Product Attributes | Product Name, Model Name, Color, Cost, Price. | Central dimension for all product-related dashboards, enabling drill-through functionality and the **Adjusted Profit** parameter calculation. |
+| **Product Subcategories Lookup** | Product Hierarchy (Level 2) | Subcategory Name | Connects products to their categories, enabling the *Orders by Category* analysis on the Executive Dashboard. |
+| **Product Categories Lookup** | Product Hierarchy (Level 1) | Category Name | Top-level grouping used for high-level aggregations (e.g., Bikes, Accessories). |
+
+> 🔑 **Modeling Integrity:** The **one-to-many** relationship structure ensures that attributes selected from any dimension table (e.g., 'Continent' from *Territory Lookup*) correctly filter the measure calculations in the fact tables (*Sales Data* and *Returns Data*), resulting in accurate report visualizations.
+
+---
 
 ---
 
