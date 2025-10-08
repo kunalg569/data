@@ -252,15 +252,98 @@ The **Gold Layer** is the serving/consumption layer. Here, curated and business-
 
 ---
 
+## 📊 Power BI Dashboards — Insights and Flexibility
+
+The final layer of the data platform is a Power BI report that connects to the curated **Gold Layer** in Azure Synapse, structured around three interactive dashboards.
+
+### **1. Executive Dashboard (Exe Dashboard)** 📈
+
+This dashboard provides a high-level summary of the entire business, focusing on key performance indicators (KPIs) and top-level trends.
+
+| Key Insight | Metric/Component | Actionable Focus |
+| :--- | :--- | :--- |
+| **Overall Performance** | **Top Card Metrics** ($24.9M Revenue, 2.17% Return Rate) | Maintain profitability while closely monitoring the return rate to ensure quality control processes are effective. |
+| **Growth Trajectory** | **Revenue Trending** | Analyze the consistent growth from 2021 into 2022 to replicate successful strategies (e.g., marketing campaigns, product launches). |
+| **Product Dominance** | **Orders by Category** (**Accessories** and **Bikes** are dominant) | Allocate advertising and inventory resources to these high-volume categories, while investigating strategies to boost sales in lower-performing categories. |
+| **High Return Risk** | **Most Returned Product Type** (**Shorts**) | Use the drill-through feature to investigate top returning products, focusing on supply chain or quality issues specific to this product line. |
+| **Focus on Top Performers** | **Top 10 Products** | Use the **Drill-Through** to immediately deep-dive into the profitability and pricing strategy of the top revenue and order drivers. |
+
+**Power BI Screenshot: Executive Dashboard**
+![Executive Dashboard](exe_dashboard.PNG)
+
+---
+
+### **2. Customer Dashboard** 👤
+
+This dashboard focuses on understanding customer value, behavior, and demographics, utilizing a parameter to switch the primary metric for detailed analysis.
+
+| Key Insight | Metric/Component | Actionable Focus |
+| :--- | :--- | :--- |
+| **Customer Segmentation** | **Orders by Income Level** (**Average** income drives most orders) | Develop targeted marketing campaigns for the high-volume Average income segment while launching premium offerings to boost the lower-volume **High** income segment. |
+| **Professional Focus** | **Orders by Occupation** (**Skilled Manual/Professional** are largest) | Tailor product messaging and channel presence to align with the habits and needs of these core professional groups. |
+| **High Value Identification** | **Top 10 Customers** (e.g., Mr. Maurice Shan) | Implement a customer loyalty or VIP program for these high-revenue patrons to ensure retention and maximize lifetime value. |
+| **Flexible Valuation** | **Parameter Control** (Revenue Per Customer OR Total Customers) | Strategists can use the parameter to shift focus from sheer volume (Total Customers) to high-margin behavior (Revenue Per Customer) for more nuanced goal setting. |
+
+**Power BI Screenshot: Customer Dashboard**
+![Customer Dashboard](customer_dashboard.PNG)
+
+---
+
+### **3. Product Dashboard** ⚙️
+
+This dashboard provides a deep-dive, granular analysis of a **selected product** and features **two interactive parameters** for strategic planning and forecasting.
+
+| Key Insight | Metric/Component | Actionable Focus |
+| :--- | :--- | :--- |
+| **Target Monitoring** | **Monthly Targets (Orders, Revenue, Profit)** | Instantly assess if the selected product is on track for current month goals. If the product is underperforming, immediate inventory or promotional adjustments are needed. |
+| **Pricing Strategy** | **Price Adjustment Parameter (Adjusted Pricing)** | Utilize this parameter to model the impact of a price change (e.g., a 10% increase) on the **Adjusted Profit** line. This provides a risk-free environment for testing pricing elasticity. |
+| **Performance Trending** | **Metric Selection Parameter (Personal Metric Selection)** | Switch the time-series view to analyze specific risks (e.g., trending *Returns*) or successes (e.g., trending *Profit*). This facilitates quick root-cause analysis for specific product issues. |
+| **Drill-Through Efficiency** | **Source from Executive Dashboard** | The direct link allows managers to transition from identifying a product that needs attention (Executive view) to immediately seeing its granular performance and future pricing potential (Product view). |
+
+**Power BI Screenshot: Product Dashboard**
+![Product Dashboard](product_dashboard.PNG)
+
+---
+
+## 🔗 Interactive Features
+
+### **Drill-Through Functionality** 🖱️
+
+The report incorporates an essential **Drill-Through** feature for seamless navigation:
+
+* **Executive to Product Detail:** Clicking on any product within the **Top 10 Products** table on the **Executive Dashboard** directly navigates the user to the **Product Dashboard**.
+* The **Product Dashboard** is automatically filtered to show the specific details of the product selected, allowing for a rapid deep-dive investigation of performance anomalies or successes.
+
+---
+
 ## 🚀 Roadmap (initial)
 
-- [x] Defined resource setup (RG, ADLS, ADF)  
-- [x] Bronze ingestion pipeline created (static)  
-- [x] Bronze ingestion pipeline upgraded (dynamic with parameters + ForEach)  
-- [x] Databricks notebooks for Silver transformations  
-- [x] Synapse schema deployment (Gold)  
-- [x] Power BI dashboard integration  
+- [x] Defined resource setup (RG, ADLS, ADF)
+- [x] Bronze ingestion pipeline created (static)
+- [x] Bronze ingestion pipeline upgraded (dynamic with parameters + ForEach)
+- [x] Databricks notebooks for Silver transformations
+- [x] Synapse schema deployment (Gold)
+- [x] Power BI dashboard integration
+- [x] **Power BI Drill-Through implemented (Executive ➡️ Product)**
+- [x] **Power BI Parameters implemented (Customer & Product Dashboards)**
 
+---
+
+## 🔭 Actionable Insights and Future Focus
+
+Based on the current data model and Power BI capabilities, here are the key areas for action and future development:
+
+### 💡 Actionable Insights from Current Data
+
+1.  **High-Value Customer Retention:** Focus marketing efforts on the **Top 10 Customers** identified in the Customer Dashboard. The highest revenue per customer comes from the **Professional** and **Skilled Manual** occupations, suggesting targeted outreach to these segments would yield the highest return.
+2.  **Product Quality Review:** The Executive Dashboard flags **"Shorts"** as the Most Returned Product Type. This requires immediate investigation (using the drill-through to the Product Dashboard) to determine if a specific size, model, or quality issue is driving the high return rate.
+3.  **Dynamic Pricing Modeling:** Utilize the **Price Adjustment** parameter on the Product Dashboard extensively. Management should model a few price change scenarios for the **Top 10 Products** to determine optimal pricing that maximizes **Adjusted Profit** without severely impacting order volume.
+
+### ⚙️ Future Engineering Focus
+
+1.  **Data Latency Reduction:** Currently, the pipeline stages (ADF, Databricks, Synapse) are executed sequentially. Future improvements should explore using **Azure Stream Analytics** or **Databricks Delta Live Tables (DLT)** for incremental loading and near real-time updates to the Silver and Gold layers, reducing dashboard latency.
+2.  **Sales Forecasting Integration:** Integrate an **Azure Machine Learning** service into the pipeline that feeds a *Fact_Forecast* table into the Gold layer. This would allow the Power BI report to include **Predictive Analytics** visualizations alongside historical and current performance.
+3.  **Data Quality Monitoring:** Implement specific **data quality checks** within the Silver transformation layer (Databricks) to monitor for invalid foreign keys, missing data, or schema drift. Results of these checks should be logged and surfaced in a dedicated Data Quality dashboard.
 
 ---
 
